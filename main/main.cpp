@@ -4,10 +4,9 @@
 namespace py = pybind11;
 
 int main() {
-    py::scoped_interpreter python;
+    py::scoped_interpreter guard{};
 
-    auto math = py::module::import("math");
-    double root_two = math.attr("sqrt")(2.0).cast<double>();
-
-    std::cout << "The square root of 2 is: " << root_two << "\n";
+    auto py_module = py::module::import("trainModel");
+    py::object result = py_module.attr("test")();//void
+    std::cout << "Finish!" << std::endl;
 }

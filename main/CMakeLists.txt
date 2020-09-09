@@ -8,3 +8,8 @@ include_directories(
 
 add_executable(bindingSample main.cpp)
 target_link_libraries(bindingSample PRIVATE pybind11::embed) # need if we want interpreter
+
+file(TO_CMAKE_PATH $<TARGET_FILE_DIR:bindingSample>// target_path)
+add_custom_command(TARGET bindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_directory  
+	${CMAKE_SOURCE_DIR}//modules//
+	${target_path})
