@@ -13,3 +13,12 @@ file(TO_CMAKE_PATH $<TARGET_FILE_DIR:bindingSample>// target_path)
 add_custom_command(TARGET bindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_directory  
 	${CMAKE_SOURCE_DIR}//modules//
 	${target_path})
+
+add_custom_command(TARGET bindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_directory  
+	${CMAKE_SOURCE_DIR}//RoadPavementSegmentation//
+	${target_path}//)
+
+add_custom_command(TARGET bindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${target_path}//RoadPavementSegmentation//)
+add_custom_command(TARGET bindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_directory  
+	${CMAKE_SOURCE_DIR}//RoadPavementSegmentation//
+	${target_path}//RoadPavementSegmentation//)
