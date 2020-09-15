@@ -1,24 +1,68 @@
 cmake_minimum_required(VERSION 3.4)
-project(bindingSample)
 
-#add_subdirectory(../3rdParty/pybind11/)
-include_directories(
-	../3rdParty/pybind11/
- )
+project(PythonBindingSample LANGUAGES CSharp)
 
-add_executable(bindingSample main.cpp)
-target_link_libraries(bindingSample PRIVATE pybind11::embed) # need if we want interpreter
+# Include CMake utilities for CSharp, for WinForm and WPF application support.
+include(CSharpUtilities)
 
-file(TO_CMAKE_PATH $<TARGET_FILE_DIR:bindingSample>// target_path)
-add_custom_command(TARGET bindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_directory  
-	${CMAKE_SOURCE_DIR}//modules//
-	${target_path})
+# Define the executable, including any .cs files. 
+# The .resx and other Properties files are optional here, but including them makes them visible in the VS solution for easy editing. 
+add_executable(PythonBindingSample
+   main.cs
+)
 
-add_custom_command(TARGET bindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_directory  
+set_property(TARGET PythonBindingSample PROPERTY VS_GLOBAL_Prefer32Bit "false")
+set(CMAKE_CSharp_FLAGS "/platform:x64")
+
+# Set the .NET Framework version for the executable.
+set_property(TARGET PythonBindingSample PROPERTY VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1")
+# Set the executable to be 32-bit.
+set_property(TARGET PythonBindingSample PROPERTY WIN32_EXECUTABLE TRUE)
+# Set the C# language version (defaults to 3.0).
+set(CMAKE_CSharp_FLAGS "/langversion:latest")
+
+# Set the source file properties for Windows Forms use.
+#csharp_set_windows_forms_properties(
+#    Form1.cs
+#    Form1.Designer.cs
+#    Program.cs
+#    Properties/AssemblyInfo.cs
+#    Properties/Resources.Designer.cs
+#    Properties/Resources.resx
+#    Properties/Settings.Designer.cs
+#    Properties/Settings.settings
+#)
+
+# If necessary, link in other library dependencies that were built locally in this source tree.
+target_link_libraries(PythonBindingSample NetworkTrainerCS)
+
+# If necessary, link in other library/DLL references, such as 3rd party libraries.
+#set_property(TARGET MyWinFormApp PROPERTY 
+#    VS_DOTNET_REFERENCE_MyThirdPartyLib /path/to/libs/MyThirdPartyLib.dll)
+
+# Add in the .NET reference libraries.
+set_property(TARGET PythonBindingSample PROPERTY VS_DOTNET_REFERENCES
+	"Microsoft.CSharp"
+	"System"
+	"System.Core"
+	"System.Data"
+)
+
+file(TO_CMAKE_PATH $<TARGET_FILE_DIR:PythonBindingSample>// target_path)
+
+add_custom_command(TARGET PythonBindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_directory  
 	${CMAKE_SOURCE_DIR}//RoadPavementSegmentation//
 	${target_path}//)
 
-add_custom_command(TARGET bindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${target_path}//RoadPavementSegmentation//)
-add_custom_command(TARGET bindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_directory  
+add_custom_command(TARGET PythonBindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${target_path}//RoadPavementSegmentation//)
+add_custom_command(TARGET PythonBindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_directory  
 	${CMAKE_SOURCE_DIR}//RoadPavementSegmentation//
 	${target_path}//RoadPavementSegmentation//)
+	
+#add_custom_command(TARGET PythonBindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_if_different 
+#	$<TARGET_FILE_DIR:NetworkTrainer>/NetworkTrainer.dll
+#	$<TARGET_FILE_DIR:PythonBindingSample>)
+
+add_custom_command(TARGET PythonBindingSample POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_if_different 
+	$<TARGET_FILE_DIR:NetworkTrainerCS>/NetworkTrainerCS.dll
+	$<TARGET_FILE_DIR:PythonBindingSample>)
