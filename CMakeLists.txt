@@ -10,6 +10,6 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 set(CMAKE_BUILD_PARALLEL_LEVEL)
 
 add_subdirectory(main)
-add_subdirectory(NetworkTrainer)
+#add_subdirectory(NetworkTrainer)
 add_subdirectory(NetworkTrainerCS)
 add_subdirectory(pybind11)

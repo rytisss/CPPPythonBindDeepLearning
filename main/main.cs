@@ -8,6 +8,7 @@ namespace HelloWorld
         {
             Console.WriteLine("Hello World!");
             NetworkTrainerCS trainer = new NetworkTrainerCS();
+            trainer.Init();
             Console.WriteLine("Hello World!");
         }
     }

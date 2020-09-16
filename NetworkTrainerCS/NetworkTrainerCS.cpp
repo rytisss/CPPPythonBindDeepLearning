@@ -1,37 +1,45 @@
 #include <iostream>
 #include "NetworkTrainerCS.h"
 
-#pragma managed(push, off)
-#include "NetworkTrainer.h"
-#pragma managed(pop)
-
-
+void MarshalString(String^ s, std::string& os)
+{
+	using namespace Runtime::InteropServices;
+	const char* chars =
+		(const char*)(Marshal::StringToHGlobalAnsi(s)).ToPointer();
+	os = chars;
+	Marshal::FreeHGlobal(IntPtr((void*)chars));
+}
 
 NetworkTrainerCS::NetworkTrainerCS()
 {
-    NetworkTrainer pTrainer;
+	pNetworkTrainer = new NetworkTrainer();
 }
 
 bool NetworkTrainerCS::Init()
 {
-    return true;
+	return pNetworkTrainer->Init();
 }
 
 bool NetworkTrainerCS::InitializeNetwork()
 {
-    return false;
+	return pNetworkTrainer->InitializeNetwork();
 }
 
 bool NetworkTrainerCS::InitializeDataLoader(String^ dataPath, String^ imageFolder, String^ labelFolder)
 {
-    return false;
+	std::string dataPathCpp, imageFolderCpp, labelFolderCpp;
+	MarshalString(dataPath, dataPathCpp);
+	MarshalString(imageFolder, imageFolderCpp);
+	MarshalString(labelFolder, labelFolderCpp);
+	return pNetworkTrainer->InitializeDataLoader(dataPathCpp, imageFolderCpp, labelFolderCpp);
 }
 
 void NetworkTrainerCS::Train()
 {
-    throw gcnew System::NotImplementedException();
+	pNetworkTrainer->Train();
 }
 
 NetworkTrainerCS::~NetworkTrainerCS()
 {
+	delete pNetworkTrainer;
 }

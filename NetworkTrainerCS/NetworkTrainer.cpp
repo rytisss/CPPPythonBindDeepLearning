@@ -26,6 +26,7 @@ NetworkTrainer::NetworkTrainer()
 
 bool NetworkTrainer::Init()
 {
+    std::cout << "Initializing interpreter!" << std::endl;
     py::scoped_interpreter guard;
     return true;
 }

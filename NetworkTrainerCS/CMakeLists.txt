@@ -7,7 +7,11 @@ include_directories(
 
 add_library(NetworkTrainerCS SHARED
 	NetworkTrainerCS.cpp
-	NetworkTrainerCS.h)
+	NetworkTrainerCS.h
+	NetworkTrainer.cpp
+	NetworkTrainer.h
+	TrainingEventsListener.cpp
+	TrainingEventsListener.h)
 	
 target_link_libraries(NetworkTrainerCS PRIVATE pybind11::embed) # need if we want interpreter
 

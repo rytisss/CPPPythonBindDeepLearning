@@ -1,8 +1,13 @@
 #ifndef NETWORKTRAINERCS_H
-#define NETWORKTRAINERCD_H
+#define NETWORKTRAINERCS_H
 
 using namespace System::Collections::Generic;
 using namespace System;
+
+
+#pragma managed(push, off)
+#include "NetworkTrainer.h"
+#pragma managed(pop)
 
 public ref class NetworkTrainerCS
 {
@@ -18,6 +23,8 @@ public:
 	void Train();
 	//
 	~NetworkTrainerCS();
+private:
+	NetworkTrainer* pNetworkTrainer;
 };
 
-#endif //NETWORKTRAINERCD_H
+#endif //NETWORKTRAINERCS_H
